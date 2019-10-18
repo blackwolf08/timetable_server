@@ -507,7 +507,6 @@ function saturday(batch, subjects) {
 }
 async function collectData(batch, subject, year, college) {
   var sub = [];
-  console.log(object);
   await fetch('http://qseven.co.in/jiit/' + college + '-' + year + 'sub.json')
     .then(response => response.json())
     .then(json => (sub = json));
