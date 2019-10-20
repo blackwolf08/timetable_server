@@ -165,10 +165,10 @@ app = Flask(__name__)
 
 @app.route('/api/timetable', methods = ['POST'])
 def TimeTable():
-    batch = request.form["subject"]
-    year = request.form["batch"]
-    college = request.form["year"]
-    subs = request.form["college"]
+    batch = request.args.get("subject")
+    year = request.args.get("batch")
+    college = request.args.get("year")
+    subs = request.args.get("college")
     timetable = getTimeTable(batch,year,college,subs)
     return jsonify(timetable)
 
