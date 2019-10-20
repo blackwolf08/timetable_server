@@ -24,7 +24,7 @@ def getTimeTable(batch,year,college,subs):
     wb = xlrd.open_workbook(loc) 
     sheet = wb.sheet_by_index(0) 
 
-
+    subs = subs.split(',')
 
     for idx, sub in enumerate(subs):
         subs[idx] = sub[len(sub)-4:]
