@@ -166,13 +166,14 @@ app = Flask(__name__)
 
 @app.route('/api/timetable', methods = ['POST'])
 def TimeTable():
-    batch = request.args.get("subject")
-    year = request.args.get("batch")
-    college = request.args.get("year")
-    subs = request.args.get("college")
+    subs = request.args.get("subject")
+    batch = request.args.get("batch")
+    year = request.args.get("year")
+    college = request.args.get("college")
     timetable = getTimeTable(batch,year,college,subs)
     return jsonify(timetable)
 
 
 if __name__ == '__main__':
+    app.config["JSON_SORT_KEYS"] = False
     app.run()
