@@ -8,16 +8,17 @@ import xlrd
 
 
 def getTimeTable(batch,year,college,subs):
+    currDir = os.path.dirname(__file__)
     if year == "1":
-        loc = ("B Tech I Sem.xlsx")
+        loc = (os.path.join(currDir,"B Tech I Sem.xlsx"))
     elif year == "2":
-        loc = ("B Tech III Sem.xlsx")
+        loc = (os.path.join(currDir,"B Tech III Sem.xlsx"))
     elif year == "3":
-        loc = ("B Tech V Sem.xlsx")
+        loc = (os.path.join(currDir,"B Tech V Sem.xlsx"))
     elif year == "4":
-        loc = ("B.TECH VII Sem.xlsx")
+        loc = (os.path.join(currDir,"B.TECH VII Sem.xlsx"))
     else:
-        loc = ("M TECH I Sem, DD.xlsx")
+        loc = (os.path.join(currDir,"M TECH I Sem, DD.xlsx"))
 
 
     wb = xlrd.open_workbook(loc) 
