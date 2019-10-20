@@ -74,7 +74,7 @@ def getTimeTable(batch,year,college,subs):
     for sub in subs:
         for i in range(sheet.ncols): 
             for j in range(85):
-                if sheet.cell_value(j, i).find(sub) != -1 and (sheet.cell_value(j, i).find(f'-{batch[1:]}') != -1 or sheet.cell_value(j, i).find(batch) != -1 or sheet.cell_value(j, i).find("ABC") != -1):
+                if sheet.cell_value(j, i).find(sub) != -1 and (sheet.cell_value(j, i).find(f'-{batch[1:]}') != -1 or sheet.cell_value(j, i).find(batch) != -1 or sheet.cell_value(j, i).find("ABC") != -1 or sheet.cell_value(j, i).find(f',{batch[1:]},') != -1 or sheet.cell_value(j, i).find(f'{batch[1:]}-') != -1) and sheet.cell_value(j, i).find(f'{batch[0:1]}') != -1:
                     row = j
                     while(row>0):
                         if sheet.cell_value(row,0) == "MON" or sheet.cell_value(row,0) == "TUES" or sheet.cell_value(row,0) == "WED" or sheet.cell_value(row,0) == "THUR" or sheet.cell_value(row,0) == "FRI" or sheet.cell_value(row,0) == "SAT":
