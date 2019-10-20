@@ -8,11 +8,6 @@ import xlrd
 
 
 def getTimeTable(batch,year,college,subs):
-    subs = "15B11CI514,15B17CI574,17B1NMA531,15B11CI511,15B17CI571,15B17CI576,15B17CI575,15B1NHS434".split(",")
-    batch = "B14"
-    year = "3"
-    loc = ""
-
     if year == "1":
         loc = ("B Tech I Sem.xlsx")
     elif year == "2":
@@ -43,22 +38,22 @@ def getTimeTable(batch,year,college,subs):
     key['SAT'] = {}
     for i in range(sheet.ncols): 
         if sheet.cell_value(1,i) != "":
-            key['MON'][sheet.cell_value(1,i)] = []
+            key['MON'][sheet.cell_value(1,i)] = ""
     for i in range(sheet.ncols): 
         if sheet.cell_value(1,i) != "":
-            key['TUES'][sheet.cell_value(1,i)] = []
+            key['TUES'][sheet.cell_value(1,i)] = ""
     for i in range(sheet.ncols): 
         if sheet.cell_value(1,i) != "":
-            key['WED'][sheet.cell_value(1,i)] = []
+            key['WED'][sheet.cell_value(1,i)] = ""
     for i in range(sheet.ncols): 
         if sheet.cell_value(1,i) != "":
-            key['THUR'][sheet.cell_value(1,i)] = []
+            key['THUR'][sheet.cell_value(1,i)] = ""
     for i in range(sheet.ncols): 
         if sheet.cell_value(1,i) != "":
-            key['FRI'][sheet.cell_value(1,i)] = []
+            key['FRI'][sheet.cell_value(1,i)] = ""
     for i in range(sheet.ncols): 
         if sheet.cell_value(1,i) != "":
-            key['SAT'][sheet.cell_value(1,i)] = []
+            key['SAT'][sheet.cell_value(1,i)] = ""
     if year == "3" or year == "1":
         del key['MON']['12 NOON-12.50 PM']
         del key['TUES']['12 NOON-12.50 PM']
@@ -85,8 +80,85 @@ def getTimeTable(batch,year,college,subs):
                             day = sheet.cell_value(row,0)
                             break
                         row-=1
-                    key[day][sheet.cell_value(1,i)].append(sheet.cell_value(j, i))
-    return key
+                    key[day][sheet.cell_value(1,i)] = sheet.cell_value(j, i)
+    res = key
+    json_data = {}
+    to_send = {}
+
+    json_data['monday'] = []
+    json_data['tuesday'] = []
+    json_data['wednesday'] = []
+    json_data['thursday'] = []
+    json_data['friday'] = []
+    json_data['saturday'] = []
+
+    for key in res.keys():
+        json_data_key=""
+        if key == "MON":
+            json_data_key = "monday"
+        if key == "TUES":
+            json_data_key = "tuesday"
+        if key == "WED":
+            json_data_key = "wednesday"
+        if key == "THUR":
+            json_data_key = "thursday"
+        if key == "FRI":
+            json_data_key = "friday"
+        if key == "SAT":
+            json_data_key = "saturday"
+        json_data[json_data_key] = []
+
+        for child_key in res[key].keys():
+            if len(res[key][child_key]) >2:
+                class_type = ""
+                time = ""
+                if child_key.find("9.50") != -1:
+                    time = "9:00"
+                if child_key.find("10.50") != -1:
+                    time = "10:00"
+                elif child_key.find("11.50") != -1:
+                    time = "11:00"
+                elif child_key.find("12.50") != -1:
+                    time = "12:00"
+                elif child_key.find("1.50") != -1:
+                    time = "1:00"
+                elif child_key.find("2.50") != -1:
+                    time = "2:00"
+                elif child_key.find("3.50") != -1:
+                    time = "3:00"
+                elif child_key.find("4.50") != -1:
+                    time = "4:00"
+                if res[key][child_key][0:1] == "P":
+                    class_type = "Practical"
+                elif res[key][child_key][0:1] == "L":
+                    class_type = "Lecture"
+                elif res[key][child_key][0:1] == "T":
+                    class_type = "Practical"
+                teachers = ""
+                for currIndex in range(len(res[key][child_key])-1,0,-1):
+                    if(res[key][child_key][currIndex]=="/"):
+                        teachers = res[key][child_key][currIndex+1:]
+                        break
+                venue=""
+                for currIndex in range(len(res[key][child_key])-1,0,-1):
+                    if(res[key][child_key][currIndex]=="-"):
+                        for char in range(currIndex,len(res[key][child_key])):
+                            if res[key][child_key][char] == "/":
+                                venue = res[key][child_key][currIndex:char]
+                                break
+                        break
+                code=""
+                for currIndex in range(len(res[key][child_key])-1,0,-1):
+                    if(res[key][child_key][currIndex]=="("):
+                        for char in range(currIndex,len(res[key][child_key])):
+                            if res[key][child_key][char] == ")":
+                                code = res[key][child_key][currIndex+1:char]
+                                break
+                        break
+
+                json_data[json_data_key].append([time,class_type,"",code,venue,teachers])
+                
+    return json_data
 
 app = Flask(__name__) 
 
